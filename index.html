@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Al Neehar Perfumes</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="logo">Al Neehar Perfumes</div>
+      <nav class="nav">
+        <a href="#home" class="nav-link">Home</a>
+        <a href="#products" class="nav-link">Products</a>
+        <a href="#contact" class="nav-link">Contact</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Open menu">☰</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="home" class="hero">
+      <div class="container hero-inner">
+        <h1 class="hero-title">Refined Scents. Timeless Luxury.</h1>
+        <p class="hero-sub">Curated perfumes crafted for memorable moments.</p>
+        <a href="#products" class="btn primary">Explore Collection</a>
+      </div>
+    </section>
+
+    <section id="products" class="products-section">
+      <div class="container">
+        <div class="section-header">
+          <h2>Our Collection</h2>
+          <p>Handpicked perfumes — classic and contemporary.</p>
+        </div>
+
+        <div id="products-grid" class="products-grid" aria-live="polite">
+          <!-- Product cards injected by script.js -->
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="contact-section">
+      <div class="container contact-inner">
+        <h2>Contact & Orders</h2>
+        <p>For wholesale or custom inquiries, message us on WhatsApp.</p>
+        <a id="whatsapp-contact" class="btn outline" href="#">Message Us on WhatsApp</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>© <span id="year"></span> Al Neehar Perfumes</div>
+      <div class="footer-links">Made with care · <a href="#contact">Contact</a></div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
