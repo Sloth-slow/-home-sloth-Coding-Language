@@ -1,9 +1,9 @@
 :root{
-  --bg:#hsl(23, 88%, 10%);
+  --bg:hsl(23, 88%, 10%);
   --panel:rgb(5, 5, 5);
   --muted:#f1d6af;
   --accent:#d18b46fb;
-  --glass: rgba(255,255,255,0.03);
+  --glass: rgba(255,245,235,0.03);
   --radius:12px;
   --container:1100px;
 }
@@ -42,6 +42,9 @@ body{
 .product:hover{transform:translateY(-6px);box-shadow:0 10px 30px rgba(0,0,0,0.5)}
 .product-img{width:100%;aspect-ratio:1/1;border-radius:10px;object-fit:cover;background:var(--glass)}
 .product-title{font-weight:600;font-size:1rem;margin:0;color:#fff}
+.size-selector{display:flex;gap:8px;margin-bottom:18px}
+.size-btn{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);padding:8px 10px;border-radius:8px;cursor:pointer}
+.size-btn.active{background:var(--accent);color:#07110a;border:0}
 .product-price{color:var(--accent);font-weight:700}
 .product-meta{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .order-btn{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);padding:8px 10px;border-radius:8px;cursor:pointer}
