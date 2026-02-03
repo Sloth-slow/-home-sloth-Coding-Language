@@ -3,20 +3,30 @@ const WHATSAPP_NUMBER = '1234567890'; // <- replace with real number
 
 // Size pricing configuration
 const SIZE_PRICES = {
-  20: 500,
-  30: 850,
-  60: 1500
+  20: 400,
+  30: 650,
+  60: 1000,
+  100: 1600
 }
 
-const products = Array.from({length:20}).map((_,i)=>{
-  const id = i+1;
-  return {
-    id,
-    name: ['Noir Velvet','Aurum Bloom','Midnight Oud','Satin Musk','Amber Reverie','Citrus Silk','Velvet Rose','Desert Dune','Ocean Whisper','Golden Fig','Lush Garden','Ivory Cashmere','Twilight Petal','Woodland Amber','Secret Oud','Vanilla Orchid','Spice Bazaar','Peony Mist','Moonlit Cedar','Sacred Myrrh'][i],
-    price: (Math.random()*60 + 30).toFixed(2),
-    img: `https://picsum.photos/seed/perfume${id}/600/600`
-  }
-})
+const premiumNames = [
+  'Voilet resins',
+  'Cherry blast',
+  'Ruby gem',
+  'Srk',
+  'Musked berry',
+  'Mafia oudh',
+  'Aurum',
+  'Coffe date',
+  'Floral oudh'
+]
+
+const products = premiumNames.map((name, i) => ({
+  id: i + 1,
+  name,
+  price: SIZE_PRICES[30],
+  img: `https://picsum.photos/seed/premium${i+1}/600/600`
+}))
 
 function formatCurrency(v){ return '₹' + parseFloat(v).toFixed(0) }
 
@@ -31,6 +41,7 @@ function renderProducts(){
           <button class="size-btn" data-size="20">20ml</button>
           <button class="size-btn active" data-size="30">30ml</button>
           <button class="size-btn" data-size="60">60ml</button>
+          <button class="size-btn" data-size="100">100ml</button>
         </div>
         <div class="product-meta">
           <div class="product-price" data-base-price="${p.price}">${formatCurrency(SIZE_PRICES[30])}</div>
@@ -94,6 +105,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
   const wbtn = document.getElementById('whatsapp-contact')
   wbtn.addEventListener('click', e=>{
     e.preventDefault()
-    openWhatsApp('Hello, I would like more information about Al Neehar Perfumes and placing an order.')
+    openWhatsApp('Hello, I would like more information about Neehar Perfumes and placing an order.')
   })
 })
