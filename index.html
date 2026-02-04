@@ -4,7 +4,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Neehar Perfumes</title>
-<link rel="stylesheet" href="G.css">
+<link rel="stylesheet" href="/-home-sloth-Coding-Language/G-website/G.css">
+<!-- fallback loader: if primary CSS doesn't apply (wrong path), try common site path -->
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  // wait briefly for CSS to load; if body has no background, attempt fallback
+  setTimeout(function(){
+    try{
+      var bg = getComputedStyle(document.body).backgroundImage || '';
+      if(!bg || bg === 'none'){
+        var l = document.createElement('link');
+        l.rel = 'stylesheet';
+        l.href = '/-home-sloth-Coding-Language/G-website/G.css';
+        document.head.appendChild(l);
+        console.warn('Primary stylesheet missing — loaded fallback /-home-sloth-Coding-Language/G-website/G.css');
+      }
+    }catch(e){
+      // ignore and do nothing
+    }
+  }, 220);
+});
+</script>
 </head>
 <body>
 <header class="site-header">
@@ -58,6 +78,6 @@
   </div>
 </footer>
 
-<script src="G.js"></script>
+<script src="/-home-sloth-Coding-Language/G-website/G.js"></script>
 </body>
 </html>
