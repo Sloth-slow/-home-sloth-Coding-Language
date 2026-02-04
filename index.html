@@ -1,51 +1,62 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Neehar Perfumes</title>
-<link rel="stylesheet" href="G.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title> Neehar Perfumes</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-<header class="site-header">
-  <div class="container header-inner">
-    <div class="logo">Neehar</div>
-    <a href="#" id="whatsapp-contact" class="contact-btn">WhatsApp Us</a>
-  </div>
-</header>
-
-<main class="container">
-  
-  <div class="hero">
-    <h1>Exquisite Fragrances</h1>
-    <p>Discover your signature scent</p>
-  </div>
-
-  <!-- Filter Buttons -->
-  <div class="filter-bar">
-    <button class="filter-btn active" data-filter="all">All</button>
-    <button class="filter-btn" data-filter="premium">Premium</button>
-    <button class="filter-btn" data-filter="regular">Regular</button>
-  </div>
-
-  <!-- Premium Section -->
-  <div id="premium-container" class="category-section">
-    <h2 class="section-title">Premium Collection</h2>
-    <div class="products-row" id="premium-list">
-      <!-- Premium items injected here -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="logo"> Neehar Perfumes</div>
+      <nav class="nav">
+        <a href="#home" class="nav-link">Home</a>
+        <a href="#products" class="nav-link">Products</a>
+        <a href="#contact" class="nav-link">Contact</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Open menu">☰</button>
     </div>
-  </div>
+  </header>
 
-  <!-- Regular Section -->
-  <div id="regular-container" class="category-section">
-    <h2 class="section-title">Regular Collection</h2>
-    <div class="products-row" id="regular-list">
-      <!-- Regular items injected here -->
+  <main>
+    <section id="home" class="hero">
+      <div class="container hero-inner">
+        <h1 class="hero-title">Refined Scents. Timeless Luxury.</h1>
+        <p class="hero-sub">Curated perfumes crafted for memorable moments.</p>
+        <a href="#products" class="btn primary">Explore Collection</a>
+      </div>
+    </section>
+
+    <section id="products" class="products-section">
+      <div class="container">
+        <div class="section-header">
+          <h2>Our Collection</h2>
+          <p>Handpicked perfumes — classic and contemporary.</p>
+        </div>
+
+        <div id="products-grid" class="products-grid" aria-live="polite">
+          <!-- Product cards injected by script.js -->
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="contact-section">
+      <div class="container contact-inner">
+        <h2>Contact & Orders</h2>
+        <p>For wholesale or custom inquiries, message us on WhatsApp.</p>
+        <a id="whatsapp-contact" class="btn outline" href="#">Message Us on WhatsApp</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>© <span id="year"></span> Neehar Perfumes</div>
+      <div class="footer-links">Made with care · <a href="#contact">Contact</a></div>
     </div>
-  </div>
+  </footer>
 
-</main>
-
-<script src="G.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
