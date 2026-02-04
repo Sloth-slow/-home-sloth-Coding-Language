@@ -282,4 +282,31 @@
       flex: 0 0 80%; /* 1 card on tiny screens */
     }
   }
-      
+  /* --- Gemini suggested overrides / helpers --- */
+/* Safe, small additions demonstrating Gemini suggestions. */
+body.gemini-dark {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+}
+
+/* alias for collection container if you prefer that naming */
+.collection-container,
+.products-row {
+  display: flex;
+  flex-wrap: wrap; /* allow wrapping on small screens */
+  justify-content: center;
+  gap: 20px;
+}
+
+/* simple filter button style variant from Gemini */
+.filter-btn.gemini {
+  background-color: #333;
+  color: #fff;
+  border: 1px solid #555;
+  padding: 8px 15px;
+  border-radius: 5px;
+}
+    
