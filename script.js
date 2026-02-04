@@ -1,172 +1,99 @@
-// --- CONFIGURATION ---
-  const WHATSAPP_NUMBER = '1234567890'; // Replace with real number (e.g. 919876543210)
+// Configuration: set your WhatsApp phone number here (use country code, no + or dashes), e.g. '15551234567'
+const WHATSAPP_NUMBER = '1234567890'; // <- replace with real number
 
-  // Prices per ml size
-  const SIZE_PRICES = {
-    20: 400,
-    30: 650,
-    60: 1000,
-    100: 1600
-  };
+// Size pricing configuration
+const SIZE_PRICES = {
+  20: 500,
+  30: 850,
+  60: 1500
+}
 
-  // Data Lists
-  const premiumNames = [
-    'Rebelian', 'Voilet resins', 'Cherry blast', 'Ruby gem', 'Srk',
-    'Musked berry', 'Mafia oudh', 'Aurum', 'Coffe date', 'Floral oudh'
-  ];
-
-  const regularNames = [
-    'Noir Velvet', 'Aurum Bloom', 'Midnight Oud', 'Satin Musk', 'Amber Reverie',
-    'Citrus Silk', 'Velvet Rose', 'Desert Dune', 'Ocean Whisper', 'Golden Fig',
-    'Lush Garden', 'Ivory Cashmere', 'Twilight Petal', 'Woodland Amber', 'Secret Oud',
-    'Vanilla Orchid', 'Spice Bazaar', 'Peony Mist', 'Moonlit Cedar', 'Sacred Myrrh'
-  ];
-
-  // --- APP LOGIC ---
-
-  // Generate Data Objects
-  const premiumProducts = premiumNames.map((name, i) => ({
-    id: `p-${i}`,
-    name,
-    img: `https://picsum.photos/seed/prem${i}/400/400`, // Placeholder images
-    category: 'premium',
-    defaultSize: 30
-  }));
-
-  const regularProducts = regularNames.map((name, i) => ({
-    id: `r-${i}`,
-    name,
-    img: `https://picsum.photos/seed/reg${i}/400/400`,
-    category: 'regular',
-    defaultSize: 30 // Changed default selection to 30ml visually
-  }));
-
-  function formatPrice(amount) {
-    return '₹' + amount;
+const products = Array.from({length:20}).map((_,i)=>{
+  const id = i+1;
+  return {
+    id,
+    name: ['Noir Velvet','Aurum Bloom','Midnight Oud','Satin Musk','Amber Reverie','Citrus Silk','Velvet Rose','Desert Dune','Ocean Whisper','Golden Fig','Lush Garden','Ivory Cashmere','Twilight Petal','Woodland Amber','Secret Oud','Vanilla Orchid','Spice Bazaar','Peony Mist','Moonlit Cedar','Sacred Myrrh'][i],
+    price: (Math.random()*60 + 30).toFixed(2),
+    img: `https://picsum.photos/seed/perfume${id}/600/600`
   }
+})
 
-  // Create HTML for a single product card
-  function createProductCard(product) {
-    const currentPrice = SIZE_PRICES[product.defaultSize];
-    
-    return `
-      <article class="product" id="${product.id}">
-        <img class="product-img" src="${product.img}" alt="${product.name}" loading="lazy" />
-        <div class="product-info">
-          <h3>${product.name}</h3>
-          
-          <div class="size-selector">
-            <button class="size-btn" onclick="updateSize('${product.id}', 20)">20ml</button>
-            <button class="size-btn active" onclick="updateSize('${product.id}', 30)">30ml</button>
-            <button class="size-btn" onclick="updateSize('${product.id}', 60)">60ml</button>
-            <button class="size-btn" onclick="updateSize('${product.id}', 100)">100ml</button>
-          </div>
+function formatCurrency(v){ return '₹' + parseFloat(v).toFixed(0) }
 
-          <div class="card-footer">
-            <span class="price" data-base-price="${currentPrice}">${formatPrice(currentPrice)}</span>
-            <button class="order-btn" onclick="orderItem('${product.id}', '${product.name}')">Order</button>
-          </div>
+function renderProducts(){
+  const grid = document.getElementById('products-grid')
+  grid.innerHTML = products.map(p=>`
+    <article class="product" data-id="${p.id}">
+      <img class="product-img" src="${p.img}" alt="${p.name}" loading="lazy" />
+      <div>
+        <h3 class="product-title">${p.name}</h3>
+        <div class="size-selector">
+          <button class="size-btn" data-size="20">20ml</button>
+          <button class="size-btn active" data-size="30">30ml</button>
+          <button class="size-btn" data-size="60">60ml</button>
         </div>
-        <!-- Hidden inputs to track state -->
-        <input type="hidden" class="selected-size" value="30">
-        <input type="hidden" class="selected-price" value="${currentPrice}">
-      </article>
-    `;
+        <div class="product-meta">
+          <div class="product-price" data-base-price="${p.price}">${formatCurrency(SIZE_PRICES[30])}</div>
+          <button class="order-btn primary" data-id="${p.id}" data-name="${encodeURIComponent(p.name)}" data-size="30" data-price="${SIZE_PRICES[30]}">Order Now</button>
+        </div>
+      </div>
+    </article>
+  `).join('')
+
+  // attach handlers for size buttons
+  grid.querySelectorAll('.size-btn').forEach(btn=>{
+    btn.addEventListener('click', e=>{
+      const product = btn.closest('.product')
+      const size = parseInt(btn.dataset.size)
+      const price = SIZE_PRICES[size]
+      
+      // update active state
+      product.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'))
+      btn.classList.add('active')
+      
+      // update price display
+      const priceEl = product.querySelector('.product-price')
+      priceEl.textContent = formatCurrency(price)
+      
+      // update order button
+      const orderBtn = product.querySelector('.order-btn')
+      orderBtn.dataset.size = size
+      orderBtn.dataset.price = price
+    })
+  })
+
+  // attach handlers for order buttons
+  grid.querySelectorAll('.order-btn').forEach(btn=>{
+    btn.addEventListener('click', e=>{
+      const id = btn.dataset.id
+      const name = decodeURIComponent(btn.dataset.name)
+      const price = btn.dataset.price
+      const size = btn.dataset.size
+      const message = `Hello, I would like to order ${name} (ID: ${id}, ${size}ml) priced at ${formatCurrency(price)}. Please let me know availability and delivery details.`
+      openWhatsApp(message)
+    })
+  })
+}
+
+function openWhatsApp(message){
+  const text = encodeURIComponent(message)
+  let url = ''
+  if(WHATSAPP_NUMBER && WHATSAPP_NUMBER.trim() !== ''){
+    url = `https://wa.me/${WHATSAPP_NUMBER}?text=${text}`
+  } else {
+    // fallback: open WhatsApp share without number (user selects contact)
+    url = `https://wa.me/?text=${text}`
   }
+  window.open(url, '_blank')
+}
 
-  // Render Lists
-  function init() {
-    const premiumContainer = document.getElementById('premium-list');
-    const regularContainer = document.getElementById('regular-list');
-
-    premiumContainer.innerHTML = premiumProducts.map(createProductCard).join('');
-    regularContainer.innerHTML = regularProducts.map(createProductCard).join('');
-
-    // Setup Filters
-    setupFilters();
-    
-    // Setup Header Contact
-    document.getElementById('whatsapp-contact').addEventListener('click', (e) => {
-      e.preventDefault();
-      openWhatsApp("Hello, I'm interested in your perfumes.");
-    });
-
-    // Setup Footer Contact
-    const footerBtn = document.getElementById('footer-whatsapp');
-    if(footerBtn) {
-      footerBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        openWhatsApp("Hello, I'm interested in your perfumes.");
-      });
-    }
-  }
-
-  // Handle Size Updates
-  window.updateSize = function(productId, size) {
-    const card = document.getElementById(productId);
-    if(!card) return;
-
-    // Update buttons UI
-    const btns = card.querySelectorAll('.size-btn');
-    btns.forEach(btn => {
-      if(btn.textContent.includes(size)) btn.classList.add('active');
-      else btn.classList.remove('active');
-    });
-
-    // Update Price
-    const newPrice = SIZE_PRICES[size];
-    const priceEl = card.querySelector('.price');
-    priceEl.textContent = formatPrice(newPrice);
-
-    // Update Hidden Inputs
-    card.querySelector('.selected-size').value = size;
-    card.querySelector('.selected-price').value = newPrice;
-  };
-
-  // Handle Order Click
-  window.orderItem = function(productId, name) {
-    const card = document.getElementById(productId);
-    const size = card.querySelector('.selected-size').value;
-    const price = card.querySelector('.selected-price').value;
-
-    const message = `Hi, I would like to order: ${name} (${size}ml) for ₹${price}. Please confirm availability.`;
-    openWhatsApp(message);
-  };
-
-  // Helper: Open WhatsApp
-  function openWhatsApp(text) {
-    const encoded = encodeURIComponent(text);
-    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`;
-    window.open(url, '_blank');
-  }
-
-  // Filter Logic
-  function setupFilters() {
-    const buttons = document.querySelectorAll('.filter-btn');
-    const premiumSection = document.getElementById('premium-container');
-    const regularSection = document.getElementById('regular-container');
-
-    buttons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        // Active visual state
-        buttons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        const filter = btn.dataset.filter;
-
-        if (filter === 'all') {
-          premiumSection.classList.remove('hidden');
-          regularSection.classList.remove('hidden');
-        } else if (filter === 'premium') {
-          premiumSection.classList.remove('hidden');
-          regularSection.classList.add('hidden');
-        } else if (filter === 'regular') {
-          premiumSection.classList.add('hidden');
-          regularSection.classList.remove('hidden');
-        }
-      });
-    });
-  }
-
-  // Start
-  document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', ()=>{
+  renderProducts()
+  document.getElementById('year').textContent = new Date().getFullYear()
+  // contact button uses a generic message
+  const wbtn = document.getElementById('whatsapp-contact')
+  wbtn.addEventListener('click', e=>{
+    e.preventDefault()
+    openWhatsApp('Hello, I would like more information about Neehar Perfumes and placing an order.')
+  })
+})
