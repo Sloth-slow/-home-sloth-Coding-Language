@@ -282,7 +282,8 @@
       flex: 0 0 80%; /* 1 card on tiny screens */
     }
   }
-  /* --- Gemini suggested overrides / helpers --- */
+
+/* --- Gemini suggested overrides / helpers --- */
 /* Safe, small additions demonstrating Gemini suggestions. */
 body.gemini-dark {
   background-color: #1a1a1a;
@@ -309,4 +310,5 @@ body.gemini-dark {
   padding: 8px 15px;
   border-radius: 5px;
 }
-    
+
+/* end of Gemini additions */
