@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Neehar Perfumes | Master Collection</title>
+  <title>Neehar Perfumes | Official Store</title>
   <style>
     :root {
       --bg: #060606;
@@ -25,7 +25,6 @@
       overflow-x: hidden;
     }
 
-    /* Sticky Header */
     .header {
       position: sticky;
       top: 0;
@@ -46,7 +45,6 @@
       text-transform: uppercase;
     }
 
-    /* Scrollable Navigation Tabs */
     .nav-container {
       position: sticky;
       top: 50px; 
@@ -62,9 +60,9 @@
       scroll-behavior: smooth;
       padding: 0 12px;
       gap: 8px;
-      scrollbar-width: none; /* Hide scrollbar Firefox */
+      scrollbar-width: none;
     }
-    .tabs::-webkit-scrollbar { display: none; } /* Hide scrollbar Chrome/Safari */
+    .tabs::-webkit-scrollbar { display: none; }
 
     .tab-btn {
       flex: 0 0 auto;
@@ -84,19 +82,13 @@
       border-color: var(--accent);
     }
 
-    /* Section Content */
-    .content-section {
-      padding: 15px 12px 40px;
-    }
-
-    /* The Vertical Grid */
     .grid {
       display: grid;
       grid-template-columns: 1fr 1fr; 
       gap: 12px;
+      padding: 15px 12px 60px; /* Added padding to bottom */
     }
 
-    /* Product Card */
     .card {
       background: var(--card-bg);
       border-radius: var(--radius);
@@ -250,30 +242,44 @@
     };
 
     const basicList = ['Purple haze', 'R7 dribble', 'Ameer', 'Zar al maa', 'Fluresca', 'Al arab', 'Guilty'];
-    const exclusiveList = ['Sutan blend', 'Madawa e gul', 'Neehar musk', 'White oudh', 'Selfmade', 'Oud noir', 'Four petals', 'Honey oudh'];
+    
+    // Checked syntax for Exclusive List
+    const exclusiveList = [
+      'Sutan blend', 
+      'Madawa e gul', 
+      'Neehar musk', 
+      'White oudh',
+      { name: 'Selfmade', img: 'image/selfmade.jpeg' }, 
+      'Oud noir', 
+      'Four petals', 
+      'Honey oudh'
+    ];
+    
     const premiumList = ['Voilet resins', 'Cherry blast', 'Ruby gem', 'Srk', 'Musked berry', 'Mafia oudh', 'Aurum', 'Coffe date', 'Floral oudh'];
     const regularList = ['Noir Velvet','Aurum Bloom','Midnight Oud','Satin Musk','Amber Reverie','Citrus Silk','Velvet Rose','Desert Dune','Ocean Whisper','Golden Fig','Lush Garden','Ivory Cashmere','Twilight Petal','Woodland Amber','Secret Oud','Vanilla Orchid','Spice Bazaar','Peony Mist','Moonlit Cedar','Sacred Myrrh'];
 
     function showPane(idx, btn) {
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      
-      document.querySelectorAll('.pane').forEach((p, i) => p.classList.toggle('active', i === idx));
-      
-      // Center the active tab in the scroll view
-      btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      try {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.pane').forEach((p, i) => p.classList.toggle('active', i === idx));
+        btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch(e) { console.error(e); }
     }
 
-    function createCard(name, category) {
+    function createCard(item, category) {
+      const name = typeof item === 'object' ? item.name : item;
+      const customImg = typeof item === 'object' ? item.img : null;
       const seed = encodeURIComponent(name);
-      const initialPrice = PRICES[category][30];
+      const initialPrice = (PRICES[category] && PRICES[category][30]) ? PRICES[category][30] : 0;
+      const imgSrc = customImg ? customImg : `https://picsum.photos/seed/${seed}/300/300`;
 
       return `
         <div class="card" data-category="${category}">
           <span class="tag">${category}</span>
           <div class="img-wrap">
-            <img src="https://picsum.photos/seed/${seed}/300/300" alt="${name}" loading="lazy">
+            <img src="${imgSrc}" alt="${name}" loading="lazy" onerror="this.onerror=null; this.src='https://via.placeholder.com/300?text=${name}';">
           </div>
           <h3 class="name">${name}</h3>
           <div class="sizes">
@@ -284,7 +290,7 @@
           </div>
           <div class="footer-row">
             <span class="price">₹${initialPrice}</span>
-            <button class="order-btn" onclick="order('${name}', this)">Order</button>
+            <button class="order-btn" data-size="30" onclick="order('${name.replace(/'/g, "\\'")}', this)">Order</button>
           </div>
         </div>
       `;
@@ -293,13 +299,10 @@
     function selectSize(el, size) {
       const card = el.closest('.card');
       const category = card.dataset.category;
-      
       card.classList.add('lifting');
       setTimeout(() => card.classList.remove('lifting'), 600);
-
       card.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
       el.classList.add('active');
-      
       const newPrice = PRICES[category][size];
       card.querySelector('.price').textContent = `₹${newPrice}`;
       card.querySelector('.order-btn').dataset.size = size;
@@ -314,19 +317,26 @@
       window.open(`https://wa.me/${WA_PHONE}?text=${text}`, '_blank');
     }
 
-    // Populate UI
-    const bHTML = basicList.map(n => createCard(n, 'basic')).join('');
-    const eHTML = exclusiveList.map(n => createCard(n, 'exclusive')).join('');
-    const pHTML = premiumList.map(n => createCard(n, 'premium')).join('');
-    const rHTML = regularList.map(n => createCard(n, 'regular')).join('');
-    
-    document.getElementById('grid-all').innerHTML = bHTML + eHTML + pHTML + rHTML;
-    document.getElementById('grid-basic').innerHTML = bHTML;
-    document.getElementById('grid-exclusive').innerHTML = eHTML;
-    document.getElementById('grid-premium').innerHTML = pHTML;
-    document.getElementById('grid-regular').innerHTML = rHTML;
-    
-    document.getElementById('year').textContent = new Date().getFullYear();
+    function init() {
+      try {
+        const bHTML = basicList.map(n => createCard(n, 'basic')).join('');
+        const eHTML = exclusiveList.map(n => createCard(n, 'exclusive')).join('');
+        const pHTML = premiumList.map(n => createCard(n, 'premium')).join('');
+        const rHTML = regularList.map(n => createCard(n, 'regular')).join('');
+        
+        document.getElementById('grid-all').innerHTML = bHTML + eHTML + pHTML + rHTML;
+        document.getElementById('grid-basic').innerHTML = bHTML;
+        document.getElementById('grid-exclusive').innerHTML = eHTML;
+        document.getElementById('grid-premium').innerHTML = pHTML;
+        document.getElementById('grid-regular').innerHTML = rHTML;
+        
+        document.getElementById('year').textContent = new Date().getFullYear();
+      } catch (e) {
+        console.error("Initialization Error: ", e);
+      }
+    }
+
+    window.onload = init;
   </script>
 </body>
 </html>
